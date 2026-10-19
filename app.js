@@ -1624,14 +1624,13 @@ window.editPortfolio =
         }
 
 
-        currentPortfolio =
-            data;
+        currentPortfolio = data;
 
+fillForm(data);
 
-        fillForm(data);
+$("savePortfolioBtn").textContent = "Save Changes";
 
-
-        showPage("create");
+showPage("create");
 
 
         notify(
