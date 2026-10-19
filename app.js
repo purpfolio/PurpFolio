@@ -1831,30 +1831,4 @@ window.deletePortfolio =
 ========================================= */
 
 
-/* =========================================
-   NAVIGATION LINKS
-========================================= */
 
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-
-    link.addEventListener("click", event => {
-
-        const pageId = link.getAttribute("href");
-
-        if (!pageId || pageId === "#") {
-            return;
-        }
-
-        const page = document.querySelector(pageId);
-
-        if (page) {
-            event.preventDefault();
-            showPage(pageId.substring(1));
-        }
-
-    });
-
-});
-    });
-
-});
