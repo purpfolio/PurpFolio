@@ -1134,10 +1134,428 @@
     }
 
 }
+    /* =========================================
+   AUTHENTICATION SCREEN
+========================================= */
+
+.auth-screen {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(124, 58, 237, 0.14),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(168, 85, 247, 0.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #faf8ff,
+            #ffffff
+        );
+}
+
+.auth-card {
+    width: min(100%, 440px);
+
+    padding: 42px;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border: 1px solid rgba(118, 82, 244, 0.14);
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 30px 80px rgba(55, 35, 100, 0.14);
+
+    backdrop-filter: blur(15px);
+
+    animation: authCardIn 0.6s ease both;
+}
+
+.auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 36px;
+}
+
+.auth-logo {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    color: white;
+
+    font-size: 1.45rem;
+    font-weight: 800;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4C1D95,
+            #7C3AED,
+            #A855F7
+        );
+
+    box-shadow:
+        0 12px 25px rgba(118, 82, 244, 0.28);
+}
+
+.auth-brand h1 {
+    margin: 0;
+
+    font-size: 1.45rem;
+
+    color: #211c3b;
+}
+
+.auth-brand p {
+    margin: 3px 0 0;
+
+    color: #817b92;
+
+    font-size: 0.82rem;
+}
+
+.auth-heading {
+    margin-bottom: 25px;
+}
+
+.auth-eyebrow {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    color: #7652f4;
+
+    font-size: 0.7rem;
+    font-weight: 800;
+
+    letter-spacing: 0.14em;
+}
+
+.auth-heading h2 {
+    margin: 0 0 9px;
+
+    color: #211c3b;
+
+    font-size: 2rem;
+
+    letter-spacing: -0.04em;
+}
+
+.auth-heading p {
+    margin: 0;
+
+    color: #777185;
+
+    line-height: 1.6;
+}
+
+.auth-panel label {
+    display: block;
+
+    margin-bottom: 17px;
+
+    color: #342d4d;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.auth-panel input {
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 14px 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ddd6ed;
+
+    border-radius: 13px;
+
+    outline: none;
+
+    background: #fff;
+
+    color: #211c3b;
+
+    font-family: inherit;
+    font-size: 0.95rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.auth-panel input:focus {
+    border-color: #7652f4;
+
+    box-shadow:
+        0 0 0 4px rgba(118, 82, 244, 0.10);
+}
+
+.auth-submit {
+    width: 100%;
+
+    margin-top: 5px;
+
+    min-height: 50px;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+.auth-message {
+    min-height: 22px;
+
+    margin: 15px 0 0;
+
+    text-align: center;
+
+    font-size: 0.88rem;
+
+    line-height: 1.5;
+}
+
+.auth-switch {
+    margin: 22px 0 0;
+
+    text-align: center;
+
+    color: #777185;
+
+    font-size: 0.88rem;
+}
+
+.auth-link {
+    padding: 0;
+
+    border: none;
+
+    background: none;
+
+    color: #7652f4;
+
+    font: inherit;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+@keyframes authCardIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+@media (max-width: 520px) {
+
+    .auth-card {
+        padding: 30px 22px;
+        border-radius: 22px;
+    }
+
+    .auth-heading h2 {
+        font-size: 1.7rem;
+    }
+
+}
 </style>
 </head>
 
 <body>
+    <!-- =========================
+     AUTHENTICATION SCREEN
+========================== -->
+<section id="authScreen" class="auth-screen">
+
+    <div class="auth-card">
+
+        <div class="auth-brand">
+            <div class="auth-logo">P</div>
+            <div>
+                <h1>PurpFolio</h1>
+                <p>Portfolio Template Generator</p>
+            </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="loginPanel" class="auth-panel">
+
+            <div class="auth-heading">
+                <span class="auth-eyebrow">WELCOME BACK</span>
+
+                <h2>Log in to PurpFolio</h2>
+
+                <p>
+                    Sign in to create and manage your portfolios.
+                </p>
+            </div>
+
+            <form id="loginForm">
+
+                <label>
+                    Email
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Password
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </label>
+
+                <button
+                    type="submit"
+                    class="btn primary auth-submit"
+                >
+                    Log In
+                </button>
+
+            </form>
+
+            <p id="loginMessage" class="auth-message"></p>
+
+            <p class="auth-switch">
+                Don't have an account?
+                <button
+                    type="button"
+                    id="showSignupBtn"
+                    class="auth-link"
+                >
+                    Sign Up
+                </button>
+            </p>
+
+        </div>
+
+
+        <!-- SIGN UP -->
+        <div
+            id="signupPanel"
+            class="auth-panel"
+            style="display: none;"
+        >
+
+            <div class="auth-heading">
+                <span class="auth-eyebrow">GET STARTED</span>
+
+                <h2>Create your account</h2>
+
+                <p>
+                    Create an account to start building your portfolio.
+                </p>
+            </div>
+
+            <form id="signupForm">
+
+                <label>
+                    Email
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Password
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="At least 6 characters"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Confirm Password
+                    <input
+                        type="password"
+                        id="signupConfirmPassword"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required
+                    >
+                </label>
+
+                <button
+                    type="submit"
+                    class="btn primary auth-submit"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+            <p id="signupMessage" class="auth-message"></p>
+
+            <p class="auth-switch">
+                Already have an account?
+                <button
+                    type="button"
+                    id="showLoginBtn"
+                    class="auth-link"
+                >
+                    Log In
+                </button>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
 
     <!-- =========================
          NAVIGATION
@@ -1280,7 +1698,7 @@
     </header>
 
 
-    <main>
+    <main id="appContent" style="display: none;">
 
         <!-- =========================
              HOME PAGE
