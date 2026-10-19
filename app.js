@@ -1541,12 +1541,12 @@ async function loadPortfolios() {
 </button>
 
 
-                        <button
-                            class="btn ghost"
-                            onclick="deletePortfolio('${portfolio.id}')"
-                        >
-                            Delete
-                        </button>
+                       <button
+    class="btn ghost delete-btn"
+    onclick="deletePortfolio('${portfolio.id}')"
+>
+    Delete
+</button>
 
                     </div>
 
