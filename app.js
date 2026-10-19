@@ -137,10 +137,6 @@ function showPage(pageId) {
         });
     }
 }
-/* =========================================
-   SHOW APP AFTER LOGIN
-========================================= */
-
 function showApp() {
     authScreen.style.display = "none";
 
