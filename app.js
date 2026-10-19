@@ -74,6 +74,24 @@ const signupMessage = $("signupMessage");
 const showSignupBtn = $("showSignupBtn");
 const showLoginBtn = $("showLoginBtn");
 
+/* =========================================
+   LOGOUT
+========================================= */
+
+const logoutBtn = $("logoutBtn");
+
+logoutBtn.addEventListener("click", async () => {
+
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+        console.error("Logout error:", error);
+        notify("Logout failed: " + error.message);
+        return;
+    }
+
+    showAuth();
+});
 
 /* =========================================
    SHOW LOGIN
