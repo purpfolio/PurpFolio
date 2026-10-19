@@ -1841,12 +1841,15 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
         const pageId = link.getAttribute("href");
 
-        if (pageId && $(pageId)) {
+        if (!pageId || pageId === "#") {
+            return;
+        }
 
+        const page = document.querySelector(pageId);
+
+        if (page) {
             event.preventDefault();
-
             showPage(pageId);
-
         }
 
     });
