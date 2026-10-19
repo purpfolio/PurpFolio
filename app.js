@@ -152,8 +152,8 @@ function showApp() {
     if (footer) {
         footer.style.display = "";
     }
-
-    showPage("home");
+   showPage("home");
+loadPortfolios();
 }
 
 
