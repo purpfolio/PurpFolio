@@ -118,7 +118,25 @@ function showSignup() {
     signupMessage.textContent = "";
 }
 
+/* =========================================
+   PAGE NAVIGATION
+========================================= */
 
+function showPage(pageId) {
+    document.querySelectorAll(".page").forEach(page => {
+        page.style.display = "none";
+    });
+
+    const page = $(pageId);
+
+    if (page) {
+        page.style.display = "";
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+}
 /* =========================================
    SHOW APP AFTER LOGIN
 ========================================= */
