@@ -156,6 +156,8 @@ function showApp() {
     if (footer) {
         footer.style.display = "";
     }
+
+    showPage("home");
 }
 
 
@@ -1858,3 +1860,25 @@ window.deletePortfolio =
    INITIALIZE
 ========================================= */
 
+
+/* =========================================
+   NAVIGATION LINKS
+========================================= */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+    link.addEventListener("click", event => {
+
+        const pageId = link.getAttribute("href");
+
+        if (pageId && $(pageId)) {
+
+            event.preventDefault();
+
+            showPage(pageId);
+
+        }
+
+    });
+
+});
