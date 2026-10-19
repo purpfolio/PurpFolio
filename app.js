@@ -1849,9 +1849,12 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
         if (page) {
             event.preventDefault();
-            showPage(pageId);
+            showPage(pageId.substring(1));
         }
 
+    });
+
+});
     });
 
 });
