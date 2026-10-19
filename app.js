@@ -7,7 +7,6 @@ const db = window.supabase.createClient(
     SUPABASE_ANON_KEY
 );
 
-
 /* =========================================
    GLOBAL VARIABLES
 ========================================= */
@@ -22,7 +21,6 @@ let currentPortfolio = null;
 ========================================= */
 
 const $ = id => document.getElementById(id);
-
 
 /* =========================================
    FORM FIELDS
@@ -58,6 +56,238 @@ const fields = [
 
 
 /* =========================================
+   AUTHENTICATION
+========================================= */
+
+const authScreen = $("authScreen");
+const appContent = $("appContent");
+
+const loginPanel = $("loginPanel");
+const signupPanel = $("signupPanel");
+
+const loginForm = $("loginForm");
+const signupForm = $("signupForm");
+
+const loginMessage = $("loginMessage");
+const signupMessage = $("signupMessage");
+
+const showSignupBtn = $("showSignupBtn");
+const showLoginBtn = $("showLoginBtn");
+
+
+/* =========================================
+   SHOW LOGIN
+========================================= */
+
+function showLogin() {
+    loginPanel.style.display = "block";
+    signupPanel.style.display = "none";
+
+    loginMessage.textContent = "";
+    signupMessage.textContent = "";
+}
+
+
+/* =========================================
+   SHOW SIGN UP
+========================================= */
+
+function showSignup() {
+    loginPanel.style.display = "none";
+    signupPanel.style.display = "block";
+
+    loginMessage.textContent = "";
+    signupMessage.textContent = "";
+}
+
+
+/* =========================================
+   SHOW APP AFTER LOGIN
+========================================= */
+
+function showApp() {
+    authScreen.style.display = "none";
+
+    appContent.style.display = "block";
+
+    const topbar = document.querySelector(".topbar");
+    const footer = document.querySelector("footer");
+
+    if (topbar) {
+        topbar.style.display = "";
+    }
+
+    if (footer) {
+        footer.style.display = "";
+    }
+}
+
+
+/* =========================================
+   SHOW AUTH SCREEN
+========================================= */
+
+function showAuth() {
+    authScreen.style.display = "flex";
+
+    appContent.style.display = "none";
+
+    const topbar = document.querySelector(".topbar");
+    const footer = document.querySelector("footer");
+
+    if (topbar) {
+        topbar.style.display = "none";
+    }
+
+    if (footer) {
+        footer.style.display = "none";
+    }
+
+    showLogin();
+}
+
+
+/* =========================================
+   SIGN UP
+========================================= */
+
+signupForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    const email = $("signupEmail").value.trim();
+    const password = $("signupPassword").value;
+    const confirmPassword = $("signupConfirmPassword").value;
+
+    signupMessage.textContent = "";
+
+    if (password !== confirmPassword) {
+        signupMessage.textContent = "Passwords do not match.";
+        return;
+    }
+
+    signupMessage.textContent = "Creating your account...";
+
+    const { data, error } = await db.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            emailRedirectTo:
+                "https://purpfolio.github.io/PurpFolio/"
+        }
+    });
+
+    if (error) {
+        console.error("Sign up error:", error);
+
+        signupMessage.textContent = error.message;
+        return;
+    }
+
+    console.log("Sign up successful:", data);
+
+    signupMessage.textContent =
+        "Account created! Please check your email and confirm your account.";
+
+    signupForm.reset();
+
+});
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+
+    loginMessage.textContent = "Logging in...";
+
+    const { data, error } = await db.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        console.error("Login error:", error);
+
+        loginMessage.textContent = error.message;
+        return;
+    }
+
+    console.log("Login successful:", data);
+
+    loginMessage.textContent = "";
+
+    showApp();
+
+    await loadPortfolios();
+
+});
+
+/* =========================================
+   LOGIN / SIGN UP SWITCH
+========================================= */
+
+showSignupBtn.addEventListener("click", showSignup);
+
+showLoginBtn.addEventListener("click", showLogin);
+
+
+/* =========================================
+   CHECK EXISTING SESSION
+========================================= */
+
+async function checkAuthentication() {
+
+    const {
+        data: { session }
+    } = await db.auth.getSession();
+
+    if (session) {
+
+        showApp();
+
+        await loadPortfolios();
+
+    } else {
+
+        showAuth();
+
+    }
+
+}
+
+
+/* =========================================
+   AUTH STATE CHANGES
+========================================= */
+
+db.auth.onAuthStateChange((event, session) => {
+
+    console.log("Auth event:", event);
+
+    if (session) {
+        showApp();
+    } else {
+        showAuth();
+    }
+
+});
+
+
+/* =========================================
+   START AUTHENTICATION CHECK
+========================================= */
+
+checkAuthentication();
+
+
+/* =========================================
    CHECK SUPABASE CONFIGURATION
 ========================================= */
 
@@ -77,6 +307,17 @@ function isSupabaseConfigured() {
 
 async function formData() {
     const data = {};
+
+    const {
+        data: { user },
+        error: userError
+    } = await db.auth.getUser();
+
+    if (userError || !user) {
+        throw new Error("You must be logged in.");
+    }
+
+    data.user_id = user.id;
 
     fields.forEach(id => {
         if (id !== "profilePicture") {
@@ -958,22 +1199,27 @@ $("portfolioForm")
             let data;
 
             try {
-    data = await formData();
-} catch (error) {
-    console.error(error);
 
-    $("formMessage").textContent =
-        error.message || "Profile picture upload failed.";
+                data = await formData();
 
-    return;
-}
+            } catch (error) {
 
-let result;
+                console.error(error);
+
+                $("formMessage").textContent =
+                    error.message ||
+                    "Profile picture upload failed.";
+
+                return;
+
+            }
+
+            let result;
 
 
             /* =============================
                UPDATE
-            ============================== */
+            ============================= */
 
             if (id) {
 
@@ -982,6 +1228,7 @@ let result;
                         .from("portfolios")
                         .update(data)
                         .eq("id", id)
+                        .eq("user_id", data.user_id)
                         .select()
                         .single();
 
@@ -990,7 +1237,7 @@ let result;
 
             /* =============================
                INSERT
-            ============================== */
+            ============================= */
 
             else {
 
@@ -1006,14 +1253,13 @@ let result;
 
             /* =============================
                ERROR
-            ============================== */
+            ============================= */
 
             if (result.error) {
 
                 console.error(
                     result.error
                 );
-
 
                 $("formMessage")
                     .textContent =
@@ -1027,7 +1273,7 @@ let result;
 
             /* =============================
                SUCCESS
-            ============================== */
+            ============================= */
 
             currentPortfolio =
                 result.data;
@@ -1060,7 +1306,6 @@ let result;
 
         }
     );
-
 
 /* =========================================
    CLEAR BUTTON
@@ -1139,23 +1384,43 @@ async function loadPortfolios() {
 
     if (!isSupabaseConfigured()) {
 
-        $("portfolioList")
-            .innerHTML = `
+        $("portfolioList").innerHTML = `
 
-                <div class="empty-state">
+            <div class="empty-state">
 
-                    Connect Supabase in
-                    <strong>config.js</strong>
-                    to load saved portfolios.
+                Connect Supabase in
+                <strong>config.js</strong>
+                to load saved portfolios.
 
-                </div>
+            </div>
 
-            `;
+        `;
 
         return;
 
     }
 
+
+    /* =============================
+       GET CURRENT USER
+    ============================= */
+
+    const {
+        data: { user },
+        error: userError
+    } = await db.auth.getUser();
+
+
+    if (userError || !user) {
+
+        return;
+
+    }
+
+
+    /* =============================
+       LOAD ONLY USER'S PORTFOLIOS
+    ============================= */
 
     const {
         data,
@@ -1163,121 +1428,127 @@ async function loadPortfolios() {
     } = await db
         .from("portfolios")
         .select("*")
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
-        );
+        .eq("user_id", user.id)
+        .order("created_at", {
+            ascending: false
+        });
 
+
+    /* =============================
+       DATABASE ERROR
+    ============================= */
 
     if (error) {
 
         console.error(error);
 
+        $("portfolioList").innerHTML = `
 
-        $("portfolioList")
-            .innerHTML = `
+            <div class="empty-state">
 
-                <div class="empty-state">
+                Database Error:
+                ${esc(error.message)}
 
-                    Database Error:
-                    ${esc(error.message)}
+            </div>
 
-                </div>
-
-            `;
+        `;
 
         return;
 
     }
 
+
+    /* =============================
+       NO PORTFOLIOS
+    ============================= */
 
     if (!data || data.length === 0) {
 
-        $("portfolioList")
-            .innerHTML = `
+        $("portfolioList").innerHTML = `
 
-                <div class="empty-state">
+            <div class="empty-state">
 
-                    No saved portfolios yet.
+                No saved portfolios yet.
 
-                    <br><br>
+                <br><br>
 
-                    Create your first portfolio
-                    using the form above.
+                Create your first portfolio
+                using the form above.
 
-                </div>
+            </div>
 
-            `;
+        `;
 
         return;
 
     }
 
 
-    $("portfolioList")
-        .innerHTML = data
-            .map(portfolio => {
+    /* =============================
+       DISPLAY PORTFOLIOS
+    ============================= */
 
-                return `
+    $("portfolioList").innerHTML = data
+        .map(portfolio => {
 
-                    <div
-                        class="portfolio-item"
-                    >
+            return `
 
-                        <div>
+                <div
+                    class="portfolio-item"
+                >
 
-                            <h3>
-                                ${esc(
-                                    portfolio.full_name
-                                )}
-                            </h3>
+                    <div>
 
-                            <p>
-                                ${esc(
-                                    portfolio.email
-                                )}
-                            </p>
+                        <h3>
+                            ${esc(
+                                portfolio.full_name
+                            )}
+                        </h3>
 
-                        </div>
-
-
-                        <div
-                            class="actions"
-                        >
-
-                            <button
-                                class="btn ghost"
-                                onclick="editPortfolio('${portfolio.id}')"
-                            >
-                                Edit
-                            </button>
-
-
-                            <button
-                                class="btn primary"
-                                onclick="viewPortfolio('${portfolio.id}')"
-                            >
-                                View
-                            </button>
-
-
-                            <button
-                                class="btn ghost"
-                                onclick="deletePortfolio('${portfolio.id}')"
-                            >
-                                Delete
-                            </button>
-
-                        </div>
+                        <p>
+                            ${esc(
+                                portfolio.email
+                            )}
+                        </p>
 
                     </div>
 
-                `;
 
-            })
-            .join("");
+                    <div
+                        class="actions"
+                    >
+
+                        <button
+                            class="btn ghost"
+                            onclick="editPortfolio('${portfolio.id}')"
+                        >
+                            Edit
+                        </button>
+
+
+                        <button
+                            class="btn primary"
+                            onclick="viewPortfolio('${portfolio.id}')"
+                        >
+                            View
+                        </button>
+
+
+                        <button
+                            class="btn ghost"
+                            onclick="deletePortfolio('${portfolio.id}')"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
 
 }
 
@@ -1300,6 +1571,31 @@ window.editPortfolio =
         }
 
 
+        /* =============================
+           GET CURRENT USER
+        ============================= */
+
+        const {
+            data: { user },
+            error: userError
+        } = await db.auth.getUser();
+
+
+        if (userError || !user) {
+
+            notify(
+                "Please log in first."
+            );
+
+            return;
+
+        }
+
+
+        /* =============================
+           LOAD ONLY USER'S PORTFOLIO
+        ============================= */
+
         const {
             data,
             error
@@ -1307,6 +1603,7 @@ window.editPortfolio =
             .from("portfolios")
             .select("*")
             .eq("id", id)
+            .eq("user_id", user.id)
             .single();
 
 
@@ -1329,9 +1626,7 @@ window.editPortfolio =
 
 
         document
-            .querySelector(
-                "#create"
-            )
+            .querySelector("#create")
             .scrollIntoView({
                 behavior: "smooth"
             });
@@ -1342,8 +1637,6 @@ window.editPortfolio =
         );
 
     };
-
-
 /* =========================================
    VIEW PORTFOLIO
 ========================================= */
@@ -1362,6 +1655,31 @@ window.viewPortfolio =
         }
 
 
+        /* =============================
+           GET CURRENT USER
+        ============================= */
+
+        const {
+            data: { user },
+            error: userError
+        } = await db.auth.getUser();
+
+
+        if (userError || !user) {
+
+            notify(
+                "Please log in first."
+            );
+
+            return;
+
+        }
+
+
+        /* =============================
+           LOAD ONLY USER'S PORTFOLIO
+        ============================= */
+
         const {
             data,
             error
@@ -1369,6 +1687,7 @@ window.viewPortfolio =
             .from("portfolios")
             .select("*")
             .eq("id", id)
+            .eq("user_id", user.id)
             .single();
 
 
@@ -1399,9 +1718,7 @@ window.viewPortfolio =
 
 
         document
-            .querySelector(
-                "#preview"
-            )
+            .querySelector("#preview")
             .scrollIntoView({
                 behavior: "smooth"
             });
@@ -1427,6 +1744,10 @@ window.deletePortfolio =
         }
 
 
+        /* =============================
+           CONFIRM DELETE
+        ============================= */
+
         const confirmation =
             confirm(
                 "Are you sure you want to delete this portfolio?"
@@ -1440,15 +1761,43 @@ window.deletePortfolio =
         }
 
 
+        /* =============================
+           GET CURRENT USER
+        ============================= */
+
+        const {
+            data: { user },
+            error: userError
+        } = await db.auth.getUser();
+
+
+        if (userError || !user) {
+
+            notify(
+                "Please log in first."
+            );
+
+            return;
+
+        }
+
+
+        /* =============================
+           DELETE ONLY USER'S PORTFOLIO
+        ============================= */
+
         const {
             error
         } = await db
             .from("portfolios")
             .delete()
-            .eq("id", id);
+            .eq("id", id)
+            .eq("user_id", user.id);
 
 
         if (error) {
+
+            console.error(error);
 
             notify(
                 error.message
@@ -1483,4 +1832,3 @@ window.deletePortfolio =
    INITIALIZE
 ========================================= */
 
-loadPortfolios();
