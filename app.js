@@ -1320,13 +1320,7 @@ $("portfolioForm")
             await loadPortfolios();
 
 
-            document
-                .querySelector(
-                    "#templates"
-                )
-                .scrollIntoView({
-                    behavior: "smooth"
-                });
+           showPage("templates");
 
         }
     );
@@ -1367,13 +1361,7 @@ $("generateBtn")
                 );
 
 
-                document
-                    .querySelector(
-                        "#create"
-                    )
-                    .scrollIntoView({
-                        behavior: "smooth"
-                    });
+                showPage("create");
 
                 return;
 
@@ -1388,13 +1376,7 @@ $("generateBtn")
                 );
 
 
-            document
-                .querySelector(
-                    "#preview"
-                )
-                .scrollIntoView({
-                    behavior: "smooth"
-                });
+           showPage("preview");
 
         }
     );
@@ -1649,11 +1631,7 @@ window.editPortfolio =
         fillForm(data);
 
 
-        document
-            .querySelector("#create")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
+        showPage("create");
 
 
         notify(
@@ -1741,11 +1719,7 @@ window.viewPortfolio =
             );
 
 
-        document
-            .querySelector("#preview")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
+        showPage("preview");
 
     };
 
