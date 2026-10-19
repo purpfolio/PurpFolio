@@ -2566,9 +2566,9 @@ footer {
 }
 /* Delete button */
 .delete-btn {
-    color: #dc2626;
+    color: #dc2626 !important;
 }
 
 .delete-btn:hover {
-    color: #b91c1c;
+    color: #b91c1c !important;
 }
