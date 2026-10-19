@@ -432,6 +432,7 @@ function clearForm() {
     $("formMessage").textContent = "";
 
     currentPortfolio = null;
+   $("savePortfolioBtn").textContent = "Save Portfolio";
 
     notify("Form cleared.");
 }
