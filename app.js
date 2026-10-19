@@ -1534,11 +1534,11 @@ async function loadPortfolios() {
 
 
                         <button
-                            class="btn primary"
-                            onclick="viewPortfolio('${portfolio.id}')"
-                        >
-                            View
-                        </button>
+    class="btn ghost"
+    onclick="viewPortfolio('${portfolio.id}')"
+>
+    View
+</button>
 
 
                         <button
