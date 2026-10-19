@@ -221,11 +221,9 @@ loginForm.addEventListener("submit", async (event) => {
 
     console.log("Login successful:", data);
 
-    loginMessage.textContent = "";
+loginMessage.textContent = "";
 
-    showApp();
-
-    await loadPortfolios();
+showApp();
 
 });
 
@@ -243,23 +241,15 @@ showLoginBtn.addEventListener("click", showLogin);
 ========================================= */
 
 async function checkAuthentication() {
-
     const {
         data: { session }
     } = await db.auth.getSession();
 
     if (session) {
-
         showApp();
-
-        await loadPortfolios();
-
     } else {
-
         showAuth();
-
     }
-
 }
 
 
