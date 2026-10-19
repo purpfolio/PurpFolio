@@ -2564,3 +2564,11 @@ footer {
         gap: 8px;
     }
 }
+/* Delete button */
+.delete-btn {
+    color: #dc2626;
+}
+
+.delete-btn:hover {
+    color: #b91c1c;
+}
