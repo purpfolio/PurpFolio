@@ -23,6 +23,50 @@ let currentPortfolio = null;
 const $ = id => document.getElementById(id);
 
 /* =========================================
+   FULL NAME VALIDATION
+========================================= */
+
+const fullNameInput = $("fullName");
+const fullNameError = $("fullNameError");
+
+function validateFullName() {
+
+    const value = fullNameInput.value.trim();
+
+    // Letters, spaces, apostrophes, and hyphens only
+    const namePattern = /^[\p{L}]+(?:[\s'-][\p{L}]+)*$/u;
+
+    if (value === "") {
+        fullNameInput.classList.remove("valid");
+        fullNameInput.classList.remove("invalid");
+        fullNameError.hidden = true;
+
+        return false;
+    }
+
+    if (!namePattern.test(value)) {
+
+        fullNameInput.classList.remove("valid");
+        fullNameInput.classList.add("invalid");
+
+        fullNameError.hidden = false;
+
+        return false;
+    }
+
+    fullNameInput.classList.remove("invalid");
+    fullNameInput.classList.add("valid");
+
+    fullNameError.hidden = true;
+
+    return true;
+}
+
+fullNameInput.addEventListener("input", validateFullName);
+
+fullNameInput.addEventListener("blur", validateFullName);
+
+/* =========================================
    FORM FIELDS
 ========================================= */
 
@@ -1228,12 +1272,17 @@ $("portfolioForm")
 
 
             const id = $("portfolioId").value;
+let data;
 
-            let data;
+if (!validateFullName()) {
+    fullNameInput.focus();
+    $("formMessage").textContent =
+        "Please enter a valid full name.";
+    return;
+}
 
-            try {
-
-                data = await formData();
+try {
+    data = await formData();
 
             } catch (error) {
 
