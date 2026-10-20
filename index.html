@@ -2304,42 +2304,21 @@
     </div>
 
     <!-- PASTE THE BUTTONS HERE -->
-    <div class="preview-actions">
+    
+<div class="preview-actions">
+    <button type="button" class="preview-btn" onclick="printPortfolio()">
+        Print
+    </button>
 
-        <button
-            type="button"
-            class="preview-btn"
-            onclick="printPortfolio()"
-        >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/>
-            </svg>
-            Print
-        </button>
+    <button type="button" class="preview-btn" onclick="savePortfolioPDF()">
+        Save as PDF
+    </button>
 
-        <button
-            type="button"
-            class="preview-btn"
-            onclick="printPortfolio()"
-        >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>
-            </svg>
-            Save as PDF
-        </button>
+    <button type="button" class="preview-btn" onclick="showPage('manage')">
+        Back to Manage
+    </button>
+</div>
 
-        <button
-            type="button"
-            class="preview-btn"
-            onclick="showPage('manage')"
-        >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-            Back to Manage
-        </button>
-
-    </div>
 
 </section>
 
