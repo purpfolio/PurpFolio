@@ -2572,3 +2572,78 @@ footer {
 .delete-btn:hover {
     color: #b91c1c !important;
 }
+
+
+/* =========================================
+   CENTER MODERN AND CREATIVE PROFILE HEADERS
+   ========================================= */
+
+/* MODERN TEMPLATE HEADER */
+.render-modern .modern-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.render-modern .modern-head img {
+    display: block;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.render-modern .modern-head h1,
+.render-modern .modern-head p {
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.render-modern .modern-head > div {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+}
+
+/* CREATIVE TEMPLATE HERO */
+.render-creative .creative-hero-main {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    gap: 35px;
+}
+
+/* Center the profile picture and its decorative ring */
+.render-creative .creative-photo-wrap {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Center the name and contact information */
+.render-creative .creative-intro {
+    width: 100%;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.render-creative .creative-intro h1,
+.render-creative .creative-contact {
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/* Center the decorative line and tagline */
+.render-creative .creative-intro-line {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.render-creative .creative-tagline {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Do not change the content sections below the hero */
