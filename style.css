@@ -2672,3 +2672,61 @@ footer {
 #fullNameError[hidden] {
     display: none;
 }
+
+/* Portfolio Preview Buttons */
+.preview-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.preview-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 22px;
+    min-height: 46px;
+
+    background: #ffffff;
+    color: #6535f5;
+    border: 1px solid #a58aff;
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.preview-btn svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.preview-btn:hover {
+    background: #f2edff;
+    border-color: #6535f5;
+    color: #5125d8;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+    .preview-actions {
+        gap: 8px;
+    }
+
+    .preview-btn {
+        flex: 1 1 140px;
+    }
+}
