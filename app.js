@@ -445,6 +445,7 @@ async function formData() {
     data.full_name = data.fullName;
 delete data.fullName;
 
+   data.template = selectedTemplate;
 return data;
 }
 /* =========================================
@@ -1948,7 +1949,10 @@ window.printPortfolio = function () {
 };
 
 
-/* SAVE AS PDF — DOWNLOAD DIRECTLY */
+/* =========================================
+   SAVE CHOSEN PORTFOLIO TEMPLATE AS PDF
+========================================= */
+
 window.savePortfolioPDF = async function () {
     const preview = document.getElementById("portfolioPreview");
     const portfolio = preview?.querySelector(".portfolio-render");
@@ -1963,35 +1967,76 @@ window.savePortfolioPDF = async function () {
         return;
     }
 
-    const portfolioName =
-        portfolio.querySelector("h1")?.textContent?.trim() || "Portfolio";
-
-    const options = {
-        margin: 10,
-        filename: portfolioName.replace(/[^a-z0-9_-]/gi, "_") + ".pdf",
-        image: {
-            type: "jpeg",
-            quality: 0.98
-        },
-        html2canvas: {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff"
-        },
-        jsPDF: {
-            unit: "mm",
-            format: "a4",
-            orientation: "portrait"
-        },
-        pagebreak: {
-            mode: ["css", "legacy"]
-        }
-    };
-
     try {
         if (typeof notify === "function") {
-            notify("Creating PDF...");
+            notify("Preparing your portfolio PDF...");
         }
+
+        // Wait for the profile picture and other images to load.
+        const images = Array.from(portfolio.querySelectorAll("img"));
+
+        await Promise.all(
+            images.map(async (img) => {
+                if (!img.complete) {
+                    await new Promise((resolve) => {
+                        img.addEventListener("load", resolve, { once: true });
+                        img.addEventListener("error", resolve, { once: true });
+                    });
+                }
+
+                if (img.decode) {
+                    await img.decode().catch(() => {});
+                }
+            })
+        );
+
+        // Wait for fonts before rendering the selected design.
+        if (document.fonts?.ready) {
+            await document.fonts.ready;
+        }
+
+        const name =
+            portfolio.querySelector("h1")?.textContent?.trim() ||
+            "Portfolio";
+
+        const filename =
+            name.replace(/[^a-z0-9_-]/gi, "_") + ".pdf";
+
+        const options = {
+            margin: [8, 8, 8, 8],
+            filename: filename,
+
+            image: {
+                type: "jpeg",
+                quality: 1
+            },
+
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: "#ffffff",
+                logging: true,
+                scrollX: 0,
+                scrollY: 0
+            },
+
+            jsPDF: {
+                unit: "mm",
+                format: "a4",
+                orientation: "portrait"
+            },
+
+            pagebreak: {
+                mode: ["css", "legacy"],
+                avoid: [
+                    "section",
+                    ".modern-box",
+                    ".creative-mini-card",
+                    ".creative-feature"
+                ]
+            }
+        };
 
         await html2pdf()
             .set(options)
@@ -1999,13 +2044,18 @@ window.savePortfolioPDF = async function () {
             .save();
 
         if (typeof notify === "function") {
-            notify("PDF downloaded successfully!");
+            notify("Your portfolio PDF has been downloaded!");
         }
+
     } catch (error) {
-        console.error("PDF generation error:", error);
-        alert("Unable to create the PDF. Please try again.");
+        console.error("Portfolio PDF error:", error);
+
+        alert(
+            "Unable to create the PDF. Please check the browser console and try again."
+        );
     }
 };
+
 
 
 
