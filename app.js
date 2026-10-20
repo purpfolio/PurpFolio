@@ -467,27 +467,40 @@ function fillForm(portfolio) {
 });
 
 }
+
+
 /* =========================================
    CLEAR FORM
 ========================================= */
 
 function clearForm() {
-
     $("portfolioId").value = "";
 
     fields.forEach(id => {
+        const field = $(id);
 
-        $(id).value = "";
-
+        field.value = "";
+        field.classList.remove("valid", "invalid");
     });
 
+    $("fullNameError").hidden = true;
     $("formMessage").textContent = "";
 
     currentPortfolio = null;
-   $("savePortfolioBtn").textContent = "Save Portfolio";
+    selectedTemplate = "simple";
+    $("savePortfolioBtn").textContent = "Save Portfolio";
+
+    document.querySelectorAll(".template-card").forEach(card => {
+        card.classList.toggle(
+            "selected",
+            card.dataset.template === "simple"
+        );
+    });
 
     notify("Form cleared.");
 }
+
+
 
 
 /* =========================================
@@ -1907,39 +1920,91 @@ document.querySelectorAll("[data-toggle-password]").forEach(button => {
 });
 
 
+
 /* =========================================
    PRINT PORTFOLIO / SAVE AS PDF
 ========================================= */
 
-
 /* PRINT PORTFOLIO IN THE SAME TAB */
 window.printPortfolio = function () {
     const preview = document.getElementById("portfolioPreview");
+    const portfolio = preview?.querySelector(".portfolio-render");
 
-    if (!preview || !preview.querySelector(".portfolio-render")) {
+    if (!portfolio) {
         alert("Please open a portfolio first.");
         return;
     }
+
+    const restorePage = function () {
+        document.body.classList.remove("printing-portfolio");
+    };
 
     document.body.classList.add("printing-portfolio");
 
-    window.print();
+    // Register before opening the print dialog.
+    window.addEventListener("afterprint", restorePage, { once: true });
 
-    window.addEventListener("afterprint", function () {
-        document.body.classList.remove("printing-portfolio");
-    }, { once: true });
+    window.print();
 };
 
-/* SAVE AS PDF */
-window.savePortfolioPDF = function () {
-    const preview = document.getElementById("portfolioPreview");
 
-    if (!preview || !preview.querySelector(".portfolio-render")) {
+/* SAVE AS PDF — DOWNLOAD DIRECTLY */
+window.savePortfolioPDF = async function () {
+    const preview = document.getElementById("portfolioPreview");
+    const portfolio = preview?.querySelector(".portfolio-render");
+
+    if (!portfolio) {
         alert("Please open a portfolio first.");
         return;
     }
 
-    window.printPortfolio();
+    if (typeof html2pdf === "undefined") {
+        alert("PDF library not loaded. Please refresh and try again.");
+        return;
+    }
+
+    const portfolioName =
+        portfolio.querySelector("h1")?.textContent?.trim() || "Portfolio";
+
+    const options = {
+        margin: 10,
+        filename: portfolioName.replace(/[^a-z0-9_-]/gi, "_") + ".pdf",
+        image: {
+            type: "jpeg",
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff"
+        },
+        jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait"
+        },
+        pagebreak: {
+            mode: ["css", "legacy"]
+        }
+    };
+
+    try {
+        if (typeof notify === "function") {
+            notify("Creating PDF...");
+        }
+
+        await html2pdf()
+            .set(options)
+            .from(portfolio)
+            .save();
+
+        if (typeof notify === "function") {
+            notify("PDF downloaded successfully!");
+        }
+    } catch (error) {
+        console.error("PDF generation error:", error);
+        alert("Unable to create the PDF. Please try again.");
+    }
 };
 
 
