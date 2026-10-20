@@ -1907,5 +1907,108 @@ document.querySelectorAll("[data-toggle-password]").forEach(button => {
 });
 
 
+/* =========================================
+   PRINT PORTFOLIO / SAVE AS PDF
+========================================= */
+
+window.printPortfolio = function () {
+    const preview = document.getElementById("portfolioPreview");
+
+    if (!preview || !preview.querySelector(".portfolio-render")) {
+        notify("Please open a portfolio first.");
+        return;
+    }
+
+    // Copy the generated portfolio into a separate print window.
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+        notify("Please allow pop-ups to print your portfolio.");
+        return;
+    }
+
+    // Copy the current page's stylesheets and inline styles.
+    const styleLinks = Array.from(
+        document.querySelectorAll('link[rel="stylesheet"]')
+    ).map(link => `<link rel="stylesheet" href="${link.href}">`).join("\n");
+
+    const inlineStyles = Array.from(
+        document.querySelectorAll("style")
+    ).map(style => style.outerHTML).join("\n");
+
+    printWindow.document.open();
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>PurpFolio - Portfolio</title>
+            ${styleLinks}
+            ${inlineStyles}
+            <style>
+                @page {
+                    size: A4;
+                    margin: 12mm;
+                }
+
+                body {
+                    margin: 0;
+                    padding: 0;
+                    background: white !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+                .portfolio-render {
+                    max-width: 100% !important;
+                    margin: 0 auto !important;
+                    box-shadow: none !important;
+                    break-inside: auto;
+                }
+
+                img {
+                    max-width: 100%;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+                section, .modern-box, .creative-mini-card {
+                    break-inside: avoid;
+                }
+
+                a {
+                    color: inherit;
+                    text-decoration: none;
+                }
+            </style>
+        </head>
+        <body>
+            ${preview.querySelector(".portfolio-render").outerHTML}
+            <script>
+                window.onload = function () {
+                    const images = Array.from(document.images);
+                    Promise.all(images.map(img => {
+                        if (img.complete) return Promise.resolve();
+                        return new Promise(resolve => {
+                            img.onload = resolve;
+                            img.onerror = resolve;
+                        });
+                    })).then(() => {
+                        setTimeout(() => {
+                            window.focus();
+                            window.print();
+                        }, 300);
+                    });
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+};
+
+
+
 
 
