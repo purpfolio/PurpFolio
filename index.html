@@ -1394,7 +1394,38 @@
     }
 
 }
-</style>
+
+.password-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.auth-panel .password-wrap input {
+    margin-top: 0;
+    padding-right: 76px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #7652f4;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.password-toggle:hover {
+    background: #f2edff;
+}
+
+    </style>
 </head>
 
 <body>
@@ -1439,23 +1470,33 @@
                     >
                 </label>
 
-                <label>
-                    Password
-                    <input
-                        type="password"
-                        id="loginPassword"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
-                </label>
+                       
+<label>
+    Password
+    <div class="password-wrap">
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+        >
+        <button
+            type="button"
+            class="password-toggle"
+            data-toggle-password="loginPassword"
+            aria-label="Show password"
+        >Show</button>
+    </div>
+</label>
 
-                <button
-                    type="submit"
-                    class="btn primary auth-submit"
-                >
-                    Log In
-                </button>
+<button
+    type="submit"
+    class="btn primary auth-submit"
+>
+    Log In
+</button>
+
 
             </form>
 
@@ -1505,29 +1546,47 @@
                     >
                 </label>
 
-                <label>
-                    Password
-                    <input
-                        type="password"
-                        id="signupPassword"
-                        placeholder="At least 6 characters"
-                        autocomplete="new-password"
-                        minlength="6"
-                        required
-                    >
-                </label>
+                
+<label>
+    Password
+    <div class="password-wrap">
+        <input
+            type="password"
+            id="signupPassword"
+            placeholder="At least 6 characters"
+            autocomplete="new-password"
+            minlength="6"
+            required
+        >
+        <button
+            type="button"
+            class="password-toggle"
+            data-toggle-password="signupPassword"
+            aria-label="Show password"
+        >Show</button>
+    </div>
+</label>
 
-                <label>
-                    Confirm Password
-                    <input
-                        type="password"
-                        id="signupConfirmPassword"
-                        placeholder="Re-enter your password"
-                        autocomplete="new-password"
-                        minlength="6"
-                        required
-                    >
-                </label>
+<label>
+    Confirm Password
+    <div class="password-wrap">
+        <input
+            type="password"
+            id="signupConfirmPassword"
+            placeholder="Re-enter your password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+        >
+        <button
+            type="button"
+            class="password-toggle"
+            data-toggle-password="signupConfirmPassword"
+            aria-label="Show password"
+        >Show</button>
+    </div>
+</label>
+
 
                 <button
                     type="submit"
