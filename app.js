@@ -152,8 +152,17 @@ function showApp() {
     if (footer) {
         footer.style.display = "";
     }
-   showPage("home");
-loadPortfolios();
+
+    // Only go to Home when the app is first opened.
+    // Do not force navigation back to Home if the user
+    // is already on another page such as Create.
+    const visiblePage = document.querySelector(".page:not([style*='display: none'])");
+
+    if (!visiblePage) {
+        showPage("home");
+    }
+
+    loadPortfolios();
 }
 
 
