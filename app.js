@@ -1838,5 +1838,25 @@ window.deletePortfolio =
    INITIALIZE
 ========================================= */
 
+document.querySelectorAll("[data-toggle-password]").forEach(button => {
+    button.addEventListener("click", () => {
+        const passwordInput = document.getElementById(
+            button.dataset.togglePassword
+        );
+
+        if (!passwordInput) return;
+
+        const showPassword = passwordInput.type === "password";
+
+        passwordInput.type = showPassword ? "text" : "password";
+        button.textContent = showPassword ? "Hide" : "Show";
+        button.setAttribute(
+            "aria-label",
+            showPassword ? "Hide password" : "Show password"
+        );
+    });
+});
+
+
 
 
