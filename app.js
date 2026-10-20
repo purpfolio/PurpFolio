@@ -153,10 +153,10 @@ function showApp() {
         footer.style.display = "";
     }
 
-    // Only go to Home when the app is first opened.
-    // Do not force navigation back to Home if the user
-    // is already on another page such as Create.
-    const visiblePage = document.querySelector(".page:not([style*='display: none'])");
+    // Keep the user on the current page.
+    // Only show Home when no page is currently visible.
+    const visiblePage = [...document.querySelectorAll(".page")]
+        .find(page => getComputedStyle(page).display !== "none");
 
     if (!visiblePage) {
         showPage("home");
@@ -230,8 +230,7 @@ signupForm.addEventListener("submit", async (event) => {
     console.log("Sign up successful:", data);
 
     signupMessage.textContent =
-        "Account created! Please check your email and confirm your account.";
-
+    "Account created successfully! You can now log in.";
     signupForm.reset();
 
 });
