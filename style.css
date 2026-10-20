@@ -2647,3 +2647,28 @@ footer {
 }
 
 /* Do not change the content sections below the hero */
+/* =========================================
+   FULL NAME VALIDATION
+========================================= */
+
+#fullName.invalid {
+    border-color: #b42318;
+    box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.08);
+}
+
+#fullName.valid {
+    border-color: #6d3a8c;
+}
+
+#fullNameError {
+    display: block;
+    color: #b42318;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+#fullNameError[hidden] {
+    display: none;
+}
