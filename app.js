@@ -449,6 +449,7 @@ delete data.fullName;
 return data;
 }
 
+
 /* =========================================
    FILL FORM FOR EDITING
 ========================================= */
@@ -477,20 +478,30 @@ function fillForm(portfolio) {
         );
     });
 
-    // Keep the existing picture available when editing.
+    // Show the saved profile picture while editing.
     const preview = $("existingPhotoPreview");
     const image = $("existingPhoto");
+    const photoInput = $("profilePicture");
 
-    if (preview && image) {
-        if (portfolio.profile_picture) {
+    if (portfolio.profile_picture) {
+        if (preview && image) {
             image.src = portfolio.profile_picture;
             preview.style.display = "block";
-        } else {
+        }
+
+        // A new upload is not required if a saved picture exists.
+        photoInput.required = false;
+    } else {
+        if (preview && image) {
             image.removeAttribute("src");
             preview.style.display = "none";
         }
+
+        // Require a picture if this portfolio has none saved.
+        photoInput.required = true;
     }
 }
+
 
 
 /* =========================================
@@ -512,6 +523,15 @@ function clearForm() {
 
     currentPortfolio = null;
     selectedTemplate = "simple";
+   $("profilePicture").required = true;
+
+const preview = $("existingPhotoPreview");
+const image = $("existingPhoto");
+
+if (preview && image) {
+    image.removeAttribute("src");
+    preview.style.display = "none";
+}
     $("savePortfolioBtn").textContent = "Save Portfolio";
 
     document.querySelectorAll(".template-card").forEach(card => {
