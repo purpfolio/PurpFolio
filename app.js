@@ -448,25 +448,48 @@ delete data.fullName;
    data.template = selectedTemplate;
 return data;
 }
+
 /* =========================================
    FILL FORM FOR EDITING
 ========================================= */
-
 
 function fillForm(portfolio) {
     $("portfolioId").value = portfolio.id || "";
 
     fields.forEach(id => {
-    if (id === "fullName") {
-        $(id).value =
-            portfolio.full_name ||
-            portfolio.fullName ||
-            "";
+        if (id === "fullName") {
+            $(id).value =
+                portfolio.full_name ||
+                portfolio.fullName ||
+                "";
         } else if (id !== "profilePicture") {
-        $(id).value = portfolio[id] || "";
-    }
-});
+            $(id).value = portfolio[id] || "";
+        }
+    });
 
+    // Restore the selected template.
+    selectedTemplate = portfolio.template || "simple";
+
+    document.querySelectorAll(".template-card").forEach(card => {
+        card.classList.toggle(
+            "selected",
+            card.dataset.template === selectedTemplate
+        );
+    });
+
+    // Keep the existing picture available when editing.
+    const preview = $("existingPhotoPreview");
+    const image = $("existingPhoto");
+
+    if (preview && image) {
+        if (portfolio.profile_picture) {
+            image.src = portfolio.profile_picture;
+            preview.style.display = "block";
+        } else {
+            image.removeAttribute("src");
+            preview.style.display = "none";
+        }
+    }
 }
 
 
